@@ -1,0 +1,4 @@
+Created two endpoints in nodejs using express.js , mysql2 and sequelize (ORM) .
+get req endpoint : http//:localhost:4001/file/readFile =: In this a json file is given in the files folder , u can also add your own file also . The .json file will be read and data will will be inserted into both table.
+post req endpoint : http//:localhost:4001/user/login =: An email will be sent as load from that email all the detail corresponding to that email in both table will be send as a response . 
+
