@@ -1,8 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
-const UserModel = require("../models/userTable");
-const UserDetailModel = require("../models/user_DetailsTable");
-const sequelize = require("../util/dbconnection");
+const { sequelize } = require("../util/dbconnection");
 
 const readFile = async (req, res) => {
   try {
@@ -14,20 +12,27 @@ const readFile = async (req, res) => {
     await sequelize.transaction(async (transaction) => {
       await Promise.all(
         data.map(async (user) => {
-          const createdUser = await UserModel.create(
-            { email: user.email },
-            { transaction }
-          );
-          await UserDetailModel.create(
-            {
+          const createUserQuery = `
+            INSERT INTO User (email) VALUES (:email);
+          `;
+          await sequelize.query(createUserQuery, {
+            replacements: { email: user.email },
+            transaction,
+          });
+
+          const createDetailQuery = `
+            INSERT INTO UserDetail (email, first_name, last_name, address, UserUserId)
+            VALUES (:email, :first_name, :last_name, :address, LAST_INSERT_ID());
+          `;
+          await sequelize.query(createDetailQuery, {
+            replacements: {
               email: user.email,
               first_name: user.first_name,
               last_name: user.last_name,
               address: user.address,
-              UserUserId: createdUser.userId,
             },
-            { transaction }
-          );
+            transaction,
+          });
         })
       );
     });
