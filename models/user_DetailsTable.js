@@ -9,6 +9,11 @@ const UserDetail = sequelize.define("User_Detail", {
     autoIncrement: true,
     unique: true,
   },
+  email: {
+    type: Sequelize.STRING,
+    unique: true,
+    allowNull: false,
+  },
   first_name: {
     type: Sequelize.STRING,
   },
